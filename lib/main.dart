@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:english_words/english_words.dart';
 
 void main() => runApp(new MyApp());
 
@@ -43,7 +44,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _counter = 3;
 
   void _incrementCounter() {
     setState(() {
@@ -58,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final wordPair = new WordPair.random();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -91,11 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             new Text(
               'You have pushed the button this many times:',
+              style: Theme.of(context).textTheme.body1,
             ),
             new Text(
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
+            new Text(wordPair.asCamelCase),
           ],
         ),
       ),
