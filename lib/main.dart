@@ -4,17 +4,12 @@ import 'package:english_words/english_words.dart';
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: "Hi Jamal",
-      home: new Scaffold(
-          appBar: new AppBar(
-            title: new Text("Welcome to Flutter"),
-          ),
-          body: new Center(
-            child: new RandomWords(),
-          )),
+      home: new RandomWords()
     );
   }
 }
@@ -27,9 +22,53 @@ class RandomWords extends StatefulWidget {
 class RandomWordsState extends State<RandomWords> {
   final List<WordPair> _suggestions = <WordPair>[];
   final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
+  final Set<WordPair> _saved = new Set<WordPair>();
+
+  void _pushSaved() {
+    Navigator.of(context).push(
+        new MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+      final Iterable<ListTile> tiles = _saved.map(
+            (WordPair pair) {
+          return new ListTile(
+            title: new Text(
+              pair.asPascalCase,
+              style: _biggerFont,
+            ),
+          );
+        },
+      );
+      final List<Widget> divided = ListTile
+          .divideTiles(
+        context: context,
+        tiles: tiles,
+      ).toList();
+      return new Scaffold(
+        appBar: new AppBar(
+          title: const Text('Saved Suggestions'),
+        ),
+        body: new ListView(children: divided),
+      );
+    },
+    ),
+    );
+  }
+
+
 
   Widget build(BuildContext context) {
-    return _buildSuggestions();
+   return new Scaffold(
+        appBar: new AppBar(
+          title: new Text("Welcome to Flutter"),
+          actions: <Widget>[
+            new IconButton(
+                icon: const Icon(Icons.list), onPressed: _pushSaved)
+          ],
+        ),
+        body: new Center(
+          child: _buildSuggestions()
+        ),
+   );
   }
 
   Widget _buildSuggestions() {
@@ -62,11 +101,26 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildRow(WordPair pair) {
+    final bool alreadySaved = _saved.contains(pair); // 新增本行
+
     return new ListTile(
       title: new Text(
         pair.asPascalCase,
         style: _biggerFont,
       ),
+      trailing: new Icon(
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
     );
   }
 }
