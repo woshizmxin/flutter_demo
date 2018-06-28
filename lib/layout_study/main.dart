@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'SamplePage.dart';
+import 'package:flutter_demo/widgets_study/SamplePage.dart';
 
 void main() => runApp(new MyApp());
 
@@ -95,7 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             new Text(
               '$_counter',
-              style: Theme.of(context).textTheme.display1,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .display1,
             ),
             new GestureDetector(
               onTap: () {
